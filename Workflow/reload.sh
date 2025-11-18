@@ -1,6 +1,6 @@
 #!/bin/zsh --no-rcs
 
-readonly currentSeason="$(curl -sf --compressed --connect-timeout 10 "https://www.premierleague.com/en/tables" --stderr - | grep -E "data-season-id=\"[0-9]{4}\"")"
+currentSeason="$(curl -sf --compressed --connect-timeout 10 "https://www.premierleague.com/en/tables" --stderr - | grep -E "data-season-id=\"[0-9]{4}\"")"
 
 if [[ -n "${currentSeason}" ]]; then
     # Get standings for current/selected season
@@ -14,6 +14,9 @@ if [[ -n "${currentSeason}" ]]; then
         mkdir -p "${seasonDir}/icons"
         teamIds=($(jq -r --arg currentSeason "${${currentSeason//[^0-9]/}:2}" '"https://resources.premierleague.com/premierleague\($currentSeason)/badges/" + .tables[].entries[].team.id + ".svg"' "${seasonDir}/standings.json"))
         curl -sf --compressed --parallel --output-dir "${seasonDir}/icons" --remote-name-all -L "${teamIds[@]}"
+        for file in ${seasonDir}/icons/*.svg; do
+            sips -s format png -o "${file%.svg}.png" --resampleHeight 256 -p 256 256 "${file}" >/dev/null && rm "${file}"
+        done
     fi
     echo -nE "${season}" > "${alfred_workflow_data}/currentSeason.txt"
     printf "Standings Updated"

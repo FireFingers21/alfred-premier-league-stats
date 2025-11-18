@@ -18,7 +18,7 @@ jq -s \
 		.[].tables[].entries | map({
 			"title": "\(.overall.position)  \(.overall | if (.position < .startingPosition) then "↑" elif (.position > .startingPosition) then "↓" else "↔" end)  \(.team.name)",
 			"subtitle": "Pl: \(.overall.played)    W: \(.overall.won)    D: \(.overall.drawn)    L: \(.overall.lost)    GF: \(.overall.goalsFor)    GA: \(.overall.goalsAgainst)    GD: \(.overall.goalsFor - .overall.goalsAgainst)        Pts: \(.overall.points)",
-			"icon": { "path": "\($icons_dir)/\(.team.id).svg" },
+			"icon": { "path": "\($icons_dir)/\(.team.id).png" },
 			"text": { "copy": .team.name },
 			"variables": { "teamId": .team.id, "teamName": .team.name }
 		}) | [(.[] | select((.variables.teamName|ascii_downcase) == $favTeam)) | (.match |= "")] + .
