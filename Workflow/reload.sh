@@ -7,10 +7,9 @@ if [[ -n "${currentSeason}" ]]; then
     season="${currentSeason//[^0-9]/}"
     seasonDir="${alfred_workflow_data}/${season}"
     mkdir -p "${seasonDir}"
-    # Only use live stats if current season
-    [[ "${season}" == "${currentSeason//[^0-9]/}" ]] && live="true" || live="false"
-    curl -sf --compressed "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v5/competitions/8/seasons/${season}/standings?live=${live}" -o "${seasonDir}/standings.json"
-    if [[ -f "${seasonDir}/standings.json" && ! -d "${seasonDir}/icons" ]]; then
+    curl -sf --compressed "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v5/competitions/8/seasons/${season}/standings?live=false" -o "${seasonDir}/standings.json"
+    set -o extendedglob
+    if [[ -f "${seasonDir}/standings.json" && ! -n ${seasonDir}/icons/*.png(#qNY1) ]]; then
         # Get Team Logos
         mkdir -p "${seasonDir}/icons"
         teamIds=($(jq -r --arg currentSeason "${${currentSeason//[^0-9]/}:2}" '"https://resources.premierleague.com/premierleague\($currentSeason)/badges/" + .tables[].entries[].team.id + ".svg"' "${seasonDir}/standings.json"))
