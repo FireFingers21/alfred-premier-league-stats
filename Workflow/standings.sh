@@ -21,8 +21,8 @@ jq -s \
 			"icon": { "path": "\($icons_dir)/\(.team.id).svg" },
 			"text": { "copy": .team.name },
 			"variables": { "teamId": .team.id, "teamName": .team.name }
-		}) | [(.[] | select((.variables.teamName|ascii_downcase) == $favTeam))] + . |
-		(.[0] |= (if ((.variables.teamName|ascii_downcase) == $favTeam) then (.title |= "★  "+.) end))
+		}) | [(.[] | select((.variables.teamName|ascii_downcase) == $favTeam)) | (.match |= "")] + .
+		| [(.[] | if ((.variables.teamName|ascii_downcase) == $favTeam) then (.title |= .+"  ★") end)]
 	else
 		[{
 			"title": "No Standings Found",
