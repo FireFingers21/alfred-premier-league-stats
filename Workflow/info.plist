@@ -24,7 +24,7 @@
 			</dict>
 			<dict>
 				<key>destinationuid</key>
-				<string>9C7EF758-C860-4275-AC49-B8DE4B019A03</string>
+				<string>F14E3EF2-D711-4289-A92A-73C17F07CF8A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -198,6 +198,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>F14E3EF2-D711-4289-A92A-73C17F07CF8A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9C7EF758-C860-4275-AC49-B8DE4B019A03</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>FireFingers21</string>
@@ -358,6 +371,30 @@
 			<string>BE18758B-5A82-4EFF-8EF6-2371B7E128E1</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># Generate small team icon
+[[ ! -f "${icons_dir}/${teamId}small.png" ]] &amp;&amp; sips -s format png -o "${icons_dir}/${teamId}small.png" --resampleHeightWidthMax 64 "${icons_dir}/${teamId}.png"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>11</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>F14E3EF2-D711-4289-A92A-73C17F07CF8A</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -719,7 +756,7 @@ Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/
 			<key>note</key>
 			<string>Open in Browser</string>
 			<key>xpos</key>
-			<real>630</real>
+			<real>790</real>
 			<key>ypos</key>
 			<real>235</real>
 		</dict>
@@ -809,7 +846,7 @@ Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/
 			<key>note</key>
 			<string>View Team Stats</string>
 			<key>xpos</key>
-			<real>450</real>
+			<real>630</real>
 			<key>ypos</key>
 			<real>125</real>
 		</dict>
@@ -827,7 +864,7 @@ Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/
 			<key>colorindex</key>
 			<integer>9</integer>
 			<key>xpos</key>
-			<real>630</real>
+			<real>790</real>
 			<key>ypos</key>
 			<real>125</real>
 		</dict>
@@ -859,6 +896,17 @@ Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/
 			<real>315</real>
 			<key>ypos</key>
 			<real>535</real>
+		</dict>
+		<key>F14E3EF2-D711-4289-A92A-73C17F07CF8A</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>9</integer>
+			<key>note</key>
+			<string>Generate Small Icon</string>
+			<key>xpos</key>
+			<real>450</real>
+			<key>ypos</key>
+			<real>125</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>

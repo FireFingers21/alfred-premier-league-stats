@@ -13,6 +13,11 @@ jq -s \
    --arg icons_dir "${icons_dir}" \
    --arg favTeam "${(L)favTeam}" \
 '{
+    "variables": {
+        "currentSeason": "'${currentSeason}'",
+        "standings_file": "'${standings_file}'",
+        "icons_dir": "'${icons_dir}'"
+    },
     "skipknowledge": true,
 	"items": (if (length != 0) then
 		.[].tables[].entries | map({

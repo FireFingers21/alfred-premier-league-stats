@@ -1,8 +1,6 @@
 #!/bin/zsh --no-rcs
 
-readonly currentSeason="$(< "${alfred_workflow_data}/currentSeason.txt")"
-readonly stats_file="${alfred_workflow_data}/${currentSeason}/stats/${teamId}.json"
-readonly icons_dir="${alfred_workflow_data}/${currentSeason}/icons"
+stats_file="${alfred_workflow_data}/${currentSeason}/stats/${teamId}.json"
 
 # Get age of stats_file in minutes
 [[ -f "${stats_file}" ]] && minutes="$((($(date +%s)-$(date -r "${stats_file}" +%s))/60))"
@@ -33,8 +31,9 @@ fi
 
 # Format Stats to Markdown
 if [[ -f "${stats_file}" ]]; then
-    mdOutput=$(jq -crs \
+    mdOutput=$(jq -crs --arg teamId "${teamId}" --arg icons_dir "${icons_dir}" \
     '.[] | 40 as $spaces |
+        "![Team Logo](\($icons_dir)/\($teamId)small.png)\n",
         "# "+.team.name,
         "\n**Games Played:** \(.stats.gamesPlayed//0|round)      ·      **Goals:** \(.stats.goals//0|round)      ·      **Goals Conceded:** \(.stats.goalsConceded//0|round)",
         (.stats |
@@ -74,7 +73,7 @@ if [[ -f "${stats_file}" ]]; then
         "```")
     ' "${stats_file}" | sed 's/\"/\\"/g')
 else
-    mdOutput='# '${teamName}'\n\n**Games Played:** \"N/A\"      ·      **Goals:** \"N/A\"      ·      **Goals Conceded:** \"N/A\"\n***\n*Unable to connect to Premier League stats*'
+    mdOutput='![Team Logo]('${icons_dir}'/'${teamId}'small.png)\n# '${teamName}'\n\n**Games Played:** \"N/A\"      ·      **Goals:** \"N/A\"      ·      **Goals Conceded:** \"N/A\"\n***\n*Unable to connect to Premier League stats*'
 fi
 
 # Output Formatted Stats to Text View
