@@ -1,6 +1,6 @@
 #!/bin/zsh --no-rcs
 
-currentSeason="$(curl -sf --compressed --connect-timeout 10 "https://www.premierleague.com/en/tables" --stderr - | grep -E "data-season-id=\"[0-9]{4}\"")"
+currentSeason="$(curl -sf --compressed --connect-timeout 10 -L "https://www.premierleague.com/en/tables" --stderr - | grep -E "data-season-id=\"[0-9]{4}\"")"
 
 if [[ -n "${currentSeason}" ]]; then
     # Get standings for current/selected season
