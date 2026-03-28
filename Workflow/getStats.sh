@@ -1,16 +1,15 @@
 #!/bin/zsh --no-rcs
 
-stats_file="${alfred_workflow_data}/${currentSeason}/stats/${teamId}.json"
-
 # Get age of stats_file in minutes
+stats_file="${alfred_workflow_data}/${seasonYear}/stats/${teamId}.json"
 [[ -f "${stats_file}" ]] && minutes="$((($(date +%s)-$(date -r "${stats_file}" +%s))/60))"
 
 # Download Stats Data
 if [[ "${forceReload}" -eq 1 || "$(date -r "${stats_file}" +%s)" -lt "$(date -v -"${autoUpdate}"M +%s)" || ! -f "${stats_file}" ]]; then
     # Rate limit to only refresh if data is older than 1 minute
     if [[ "${minutes}" -gt 0 || -z "${minutes}" ]]; then
-        mkdir -p "${alfred_workflow_data}/${currentSeason}/stats"
-        curl -sf --compressed --connect-timeout 10 -L "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/${currentSeason}/teams/${teamId}/stats" -o "${stats_file}" && minutes=0
+        mkdir -p "${alfred_workflow_data}/${seasonYear}/stats"
+        curl -sf --compressed --connect-timeout 10 -L "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/${seasonYear}/teams/${teamId}/stats" -o "${stats_file}" && minutes=0
     fi
 fi
 
@@ -73,7 +72,7 @@ if [[ -f "${stats_file}" ]]; then
         "```")
     ' "${stats_file}" | sed 's/\"/\\"/g')
 else
-    mdOutput='![Team Logo]('${icons_dir}'/'${teamId}'small.png)\n# '${teamName}'\n\n**Games Played:** \"N/A\"      ·      **Goals:** \"N/A\"      ·      **Goals Conceded:** \"N/A\"\n***\n*Unable to connect to Premier League stats*'
+    mdOutput='![Team Logo]('${icons_dir}'/'${teamId}'small.png)\n# '${teamName}'\n\n**Games Played:** N/A      ·      **Goals:** N/A      ·      **Goals Conceded:** N/A\n***\n*No Team Stats available*'
 fi
 
 # Output Formatted Stats to Text View

@@ -1,12 +1,17 @@
 #!/bin/zsh --no-rcs
 
-# Auto Update
-[[ -f "${alfred_workflow_data}/currentSeason.txt" ]] && [[ "$(date -r "${alfred_workflow_data}/currentSeason.txt" +%s)" -lt "$(date -v -"${autoUpdate}"M +%s)" ]] && reload=$(./reload.sh)
+# Get current/selected season
+[[ "$(date +%s)" -ge "$(date -jv 8m +%s)" ]] && seasonYear="$(date +%Y)" || seasonYear="$(($(date +%Y) - 1))"
+seasonDir="${alfred_workflow_data}/${seasonYear}"
 
-# Get files for current season
-currentSeason="$(< "${alfred_workflow_data}/currentSeason.txt")"
-standings_file="${alfred_workflow_data}/${currentSeason}/standings.json"
-icons_dir="${alfred_workflow_data}/${currentSeason}/icons"
+# Auto Update
+set -o extendedglob
+[[ -f ${alfred_workflow_data}/*/*(#i)standings.json(#qNY1) ]] \
+&& [[ "$(date -r "${alfred_workflow_data}" +%s)" -lt "$(date -v -"${autoUpdate}"M +%s)" || ! -d "${alfred_workflow_data}/${seasonYear}" ]] && reload=$(./reload.sh)
+
+# Get season files
+standings_file="${seasonDir}/standings.json"
+icons_dir="${seasonDir}/icons"
 
 # Load Standings
 jq -s \
@@ -14,7 +19,7 @@ jq -s \
    --arg favTeam "${(L)favTeam}" \
 '{
     "variables": {
-        "currentSeason": "'${currentSeason}'",
+        "seasonYear": "'${seasonYear}'",
         "standings_file": "'${standings_file}'",
         "icons_dir": "'${icons_dir}'"
     },
