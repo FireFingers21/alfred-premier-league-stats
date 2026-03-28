@@ -30,8 +30,8 @@ jq -s \
 			"subtitle": "Pl: \(.overall.played)    W: \(.overall.won)    D: \(.overall.drawn)    L: \(.overall.lost)    GF: \(.overall.goalsFor)    GA: \(.overall.goalsAgainst)    GD: \(.overall.goalsFor - .overall.goalsAgainst)        Pts: \(.overall.points)",
 			"icon": { "path": "\($icons_dir)/\(.team.id).png" },
 			"text": { "copy": .team.name },
-			"variables": { "teamId": .team.id, "teamName": .team.name }
-		}) | [(.[] | select((.variables.teamName|ascii_downcase) == $favTeam)) | (.match |= "")] + .
+			"variables": { "teamId": .team.id, "teamName": .team.name, "seq": .overall.position }
+		}) | [(.[] | select((.variables.seq != 1) and (.variables.teamName|ascii_downcase) == $favTeam)) | (.match |= "")] + .
 		| [(.[] | if ((.variables.teamName|ascii_downcase) == $favTeam) then (.title |= .+"  ★") end)]
 	else
 		[{
