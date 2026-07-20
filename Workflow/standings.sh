@@ -9,19 +9,17 @@ set -o extendedglob
 [[ -f ${alfred_workflow_data}/*/*(#i)standings.json(#qNY1) ]] \
 && [[ "$(date -r "${alfred_workflow_data}" +%s)" -lt "$(date -v -"${autoUpdate}"M +%s)" || ! -d "${alfred_workflow_data}/${seasonYear}" ]] && reload=$(./reload.sh)
 
-# Get season files
-standings_file="${seasonDir}/standings.json"
-icons_dir="${seasonDir}/icons"
-
 # Load Standings
-jq -s \
-   --arg icons_dir "${icons_dir}" \
-   --arg favTeam "${(L)favTeam}" \
+jq -cs \
+   --arg alfred_workflow_keyword "${alfred_workflow_keyword}" \
+   --arg favTeam "$(iconv -f UTF-8-MAC -t UTF-8 <<< ${(L)favTeam})" \
+   --arg icons_dir "${seasonDir}/icons" \
+   --arg seasonYear "${seasonYear}" \
 '{
     "variables": {
-        "seasonYear": "'${seasonYear}'",
-        "standings_file": "'${standings_file}'",
-        "icons_dir": "'${icons_dir}'"
+        "keyword": $alfred_workflow_keyword,
+        "icons_dir": $icons_dir,
+        "seasonYear": $seasonYear
     },
     "skipknowledge": true,
 	"items": (if (length != 0) then
@@ -40,4 +38,4 @@ jq -s \
 			"arg": "reload"
 		}]
 	end)
-}' "${standings_file}"
+}' "${seasonDir}/standings.json"
