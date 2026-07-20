@@ -23,14 +23,16 @@ jq -cs \
     },
     "skipknowledge": true,
 	"items": (if (length != 0) then
-		.[].tables[].entries | map({
-			"title": "\(.overall.position)  \(.overall | if (.position < .startingPosition) then "↑" elif (.position > .startingPosition) then "↓" else "↔" end)  \(.team.name)",
+		.[].tables[].entries | map(((.team.name|ascii_downcase) == $favTeam) as $isFavourite | {
+			"title": "\(.overall.position)  \(.overall | if (.position < .startingPosition) then "↑" elif (.position > .startingPosition) then "↓" else "↔" end)  \(.team.name)  \(if ((.team.name|ascii_downcase) == $favTeam) then "★" else "" end)",
 			"subtitle": "Pl: \(.overall.played)    W: \(.overall.won)    D: \(.overall.drawn)    L: \(.overall.lost)    GF: \(.overall.goalsFor)    GA: \(.overall.goalsAgainst)    GD: \(.overall.goalsFor - .overall.goalsAgainst)        Pts: \(.overall.points)",
 			"icon": { "path": "\($icons_dir)/\(.team.id).png" },
 			"text": { "copy": .team.name },
-			"variables": { "teamId": .team.id, "teamName": .team.name, "seq": .overall.position }
+			"variables": { "favTeamNew": .team.name, "teamId": .team.id, "teamName": .team.name, "seq": .overall.position },
+			"mods": {
+				"cmd+shift": {"subtitle": "⇧⌘↩ \(if ($isFavourite) then "Unset" else "Set" end) Favourite Team"}
+			}
 		}) | [(.[] | select((.variables.seq != 1) and (.variables.teamName|ascii_downcase) == $favTeam)) | (.match |= "")] + .
-		| [(.[] | if ((.variables.teamName|ascii_downcase) == $favTeam) then (.title |= .+"  ★") end)]
 	else
 		[{
 			"title": "No Standings Found",
